@@ -20,15 +20,22 @@ suite('Functional Tests', function() {
   * Each test should completely test the response of the API end-point including response status code!
   */
   test('#example Test GET /api/books', function(done){
-     chai.request(server)
-      .get('/api/books')
+    // First create a book so we have at least one in the array
+    chai.request(server)
+      .post('/api/books')
+      .send({ title: 'Example Book' })
       .end(function(err, res){
-        assert.equal(res.status, 200);
-        assert.isArray(res.body, 'response should be an array');
-        assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
-        assert.property(res.body[0], 'title', 'Books in array should contain title');
-        assert.property(res.body[0], '_id', 'Books in array should contain _id');
-        done();
+        // Then test GET /api/books
+        chai.request(server)
+          .get('/api/books')
+          .end(function(err, res){
+            assert.equal(res.status, 200);
+            assert.isArray(res.body, 'response should be an array');
+            assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
+            assert.property(res.body[0], 'title', 'Books in array should contain title');
+            assert.property(res.body[0], '_id', 'Books in array should contain _id');
+            done();
+          });
       });
   });
   /*
@@ -61,7 +68,7 @@ suite('Functional Tests', function() {
         .send({})
         .end(function(err, res){
           assert.equal(res.status, 200);
-          assert.equal(res.text, 'missing title');
+          assert.equal(res.text, 'missing required field title');
           done();
         });
       });
@@ -159,7 +166,7 @@ suite('Functional Tests', function() {
           .send({})
           .end(function(err, res){
             assert.equal(res.status, 200);
-            assert.equal(res.text, 'missing comment');
+            assert.equal(res.text, 'missing required field comment');
             done();
           });
         });

@@ -31,7 +31,7 @@ module.exports = function (app) {
       let title = req.body.title;
       // response will contain new book object including at least _id and title
       if(!title) {
-        return res.status(200).type('text').send('missing title');
+        return res.status(200).type('text').send('missing required field title');
       }
       const _id = generateId();
       const book = { _id, title, comments: [] };
@@ -65,7 +65,7 @@ module.exports = function (app) {
         return res.type('text').send('no book exists');
       }
       if(!comment) {
-        return res.status(200).type('text').send('missing comment');
+        return res.status(200).type('text').send('missing required field comment');
       }
       book.comments.push(comment);
       res.json({ _id: book._id, title: book.title, comments: book.comments });
